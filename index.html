@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <title>Book List</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="./booklist.js"></script>
+    <style>
+        .less{
+            color: red;
+        }
+        .more{
+            color: green;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="mount">
+        <!-- /////////display books/////////////// -->
+      <div class="d-flex justify-content-between alien-items-baseline p-5" >
+        <div
+          class="card"
+          style="width: 250px"
+          v-for="book in books"
+          :key="book.ISBN"
+          :title="book.author"
+        >
+          <img :src="book.image" alt="book" style="height: 200px" />
+          <h4 class="p-2">{{book.category}}</h4>
+          <div class="d-flex justify-content-between p-2">
+            <p>{{book.name}}</p>
+            <p :class="[book.numberOfPages >= 400 ?'more':'',book.numberOfPages < 400 ? 'less':'']">{{book.numberOfPages}}</p>
+          </div>
+          <div class="p-2">
+            <button class="btn btn-primary" v-if="book.isWatched===false" @Click="addToList(book)">addList</button>
+            <button class="btn btn-danger" v-else @Click="removeFromList(book)">removeList</button>
+          </div>
+        </div>
+      </div>
+      <!-- /////////booklist///////////// -->
+      <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>category</th>
+                <th>price</th>
+                <th>numberOfPages</th>
+                <th>author</th>
+                <th>remove on list</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="book in books" v-Show="book.isWatched === true">
+                <td>{{book.name}}</td>
+                <td>{{book.category}}</td>
+                <td>{{book.price}}</td>
+                <td>{{book.numberOfPages}}</td>
+                <td>{{book.author}}</td>
+                <td><button class="btn btn-danger" @Click="removeFromList(book)">remove</button></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- /////////////vue//////////// -->
+    <script>
+      let app = Vue.createApp({
+        data: function () {
+          return {
+            books: books,
+          };
+        },
+        methods: {
+            addToList:(book)=>{
+                book.isWatched=true
+            },
+                removeFromList:(book)=>{
+                book.isWatched=false
+            },
+        },
+      });
+      app.mount("#mount");
+    </script>
+  </body>
+</html>
